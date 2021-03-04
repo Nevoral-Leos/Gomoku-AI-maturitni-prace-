@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Piskvorky</title>
+        <link rel="stylesheet" 
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <style>
+            table {
+                border-collapse: collapse;
+                margin: auto;
+            }
+            td {
+                border: 1px solid black;
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+                text-align: center;
+            }
+            td > a {
+                font-size: 18px;
+            }
+            .pole {
+                width: 40px;
+                height: 40px;
+            }
+        </style>
+    </head>
+    <body>
+        
+         <div>
+            <a href="{{url_for('reset')}}" class="btn btn-default">Reset Game</a>
+             
+         </div>
+         <div>{{score}} </div>
+         {% if winnerFound %}
+            <div>
+                    <h1> WINNER is {{winner}}</h1>
+            </div>
+         {% endif %}
+        <table>
+            {% for i in range(15) %}
+                <tr>
+                    {% for j in range(15) %}
+                    <td>
+                        {% if board[i+4][j+4] == "X" or board[i+4][j+4] == "O" %}
+                        {{ board[i+4][j+4] }}
+                        {% elif winnerFound %}
+                        <div class="pole"></div>
+                        
+                        {% else %}
+                        <a href="{{ url_for('play', x=i, y=j) }}"><div class="pole"></div></a>
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>>
