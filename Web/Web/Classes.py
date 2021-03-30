@@ -48,6 +48,18 @@ class Game():
     def get_player(self):
         return self.player
 
+    def get_first_player(self):
+        return self.first_player
+
+    def set_first_player(self, i):
+        self.first_player = i
+
+    def get_poradi(self):
+        return self.poradi
+
+    def set_poradi(self, i):
+        self.poradi = i
+
     def change_player(self):
         self.player = "O" if self.player == "X" else "X"
         self.pocet_tahu += 1
@@ -59,7 +71,7 @@ class Game():
         return self.score
 
     def set_score(self, score):
-        self.score = score
+        self.score += score
 
     def set_win(self):
         self.win = True
@@ -98,17 +110,20 @@ class Board():
     def get_rozvoj(self):
         return self.rozvoj
 
+    def set_rozvoj(self):
+        self.rozvoj == 0
+
     def get_xy(self):
         return self.tahx, self.tahy
 
     def get_move(self, i, j):
         if self.board[i][j] != "X" or self.board[i][j] != "O":
-            if (self.player == "O"):
-                self.score -= int(self.board[i][j])
-            else: 
-                self.score += int(self.board[i][j])
+            value = int(self.board[i][j])
             self.board[i][j] = self.player
-            Heuristika(self.board, i, j)
+            if (self.player == "O"):
+                self.score -= value + Heuristika(self.board, i, j)
+            else: 
+                self.score += value + Heuristika(self.board, i, j)
             self.tahx = i
             self.tahy = j
             self.hranice_topx, self.hranice_bottomx = Hranice_X(i, self.hranice_topx, self.hranice_bottomx)
@@ -130,12 +145,6 @@ class Branch():
 
     def get_board_obj(self, i):
         return self.results[i]
-
-    def get_board(self, i):      
-        return self.results[i].get_board()
-
-    def get_board_borders(self):
-        return self.motherboard.get_board_borders()
 
     def get_score(self, i):
         return self.results[i].get_score()
@@ -186,5 +195,30 @@ class Tree():
     
     def get_level(self, i):
         return self.tree[i]
+
+    def get_smth(self, level_id, branch_id, element_id, what_to_get):
+        if (what_to_get == "board_obj"):
+            return self.tree[level_id].get_branch(branch_id).get_board_obj(element_id)
+        elif (what_to_get == "score"):
+            return self.tree[level_id].get_branch(branch_id).get_score(element_id)
+        elif (what_to_get == "rozvoj"):
+            return self.tree[level_id].get_branch(branch_id).get_rozvoj(element_id)
+        elif (what_to_get == "motherboard_score"):
+            return self.tree[level_id].get_branch(branch_id).get_motherboard_score()
+        elif (what_to_get == "motherboard_board"):
+            return self.tree[level_id].get_branch(branch_id).get_motherboard_board()
+        elif (what_to_get == "motherboard_borders"):
+            return self.tree[level_id].get_branch(branch_id).get_motherboard_borders()
+        elif (what_to_get == "branch"):
+            return self.tree[level_id].get_branch(branch_id)
+        elif (what_to_get == "element_count"):
+            return self.tree[level_id].get_branch(branch_id).get_len()
+        elif (what_to_get == "branch_count"):
+            return self.tree[level_id].get_numb_branch()
+        else: return "error"
+
+    def set_smth(self, level_id, branch_id, element_id, what_to_set, value):
+        if (what_to_set == "motherboard_score"):
+            self.tree[level_id].get_branch(branch_id).set_motherboard_score(value)
 
 from Web.Mechaniky import *

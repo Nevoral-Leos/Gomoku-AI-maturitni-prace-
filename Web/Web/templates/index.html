@@ -1,59 +1,207 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
-    <head>
-        <title>Piskvorky</title>
-        <link rel="stylesheet" 
-        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <style>
-            table {
-                border-collapse: collapse;
-                margin: auto;
-            }
-            td {
-                border: 1px solid black;
-                width: 40px;
-                height: 40px;
-                font-size: 20px;
-                text-align: center;
-            }
-            td > a {
-                font-size: 18px;
-            }
-            .pole {
-                width: 40px;
-                height: 40px;
-            }
-        </style>
-    </head>
+<head>
+    <title>Gomoku</title>
+    <meta charset="utf-8" />
+    <style>
+        body {
+            font-family: cursive;
+            background-image: linear-gradient(to right, dodgerblue, white, white, white, firebrick);
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: auto;
+        }
+
+        article {
+            width: 660px;
+            margin: 3% auto;
+            text-align: justify;
+        }
+
+        h1 {
+            text-align: center;
+            margin: auto;
+            font-size: 120px;
+        }
+
+        td {
+            border: 2px solid black;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        #menu {
+            position: relative;
+            width: 80%;
+            margin: 2% auto;
+            background: transparent;
+        }
+
+        .button {
+            display: inline-block;
+            text-align: center;
+            font-size: 30px;
+            color: black;
+            background: transparent;
+            border: 4px solid black;
+            border-radius: 20px;
+            width: 18%;
+            height: 40px;
+            margin: 0 3% 0 2%;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        #WinnerX {
+            position: relative;
+            text-align: center;
+            color: firebrick;
+            font-size: 10vw;
+            font-weight: bold;
+            margin: auto;
+            background: transparent;
+            z-index: 50;
+        }
+
+        #WinnerO {
+            position: relative;
+            text-align: center;
+            color: dodgerblue;
+            font-size: 10vw;
+            font-weight: bold;
+            margin: auto;
+            background: transparent;
+            z-index: 50;
+        }
+
+        .X {
+            width: 40px;
+            height: 40px;
+        }
+
+        .divX1 {
+            position: absolute;
+            width: 36px;
+            border: 2px solid red;
+            border-radius: 2px;
+            transform: rotate(45deg);
+            z-index: -1;
+            margin-top: 18px;
+        }
+
+        .divX2 {
+            position: absolute;
+            width: 36px;
+            border: 2px solid red;
+            border-radius: 2px;
+            transform: rotate(-45deg);
+            z-index: 1;
+            margin-top: 18px;
+        }
+
+        .O {
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            border: 4px solid blue;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .pole {
+            width: 40px;
+            height: 40px;
+        }
+    </style>
+</head>
+{% if winnerFound == True %}
+<a href="{{url_for('reset')}}">
     <body>
-        
-         <div>
-            <a href="{{url_for('reset')}}" class="btn btn-default">Reset Game</a>
-             
-         </div>
-         <div>{{score}} </div>
-         {% if winnerFound %}
-            <div>
-                    <h1> WINNER is {{winner}}</h1>
-            </div>
-         {% endif %}
+        <h1>Gomoku</h1>
+        {% if winner == "X" %}
+        <div id="WinnerX">WINNER is {{winner}}</div>
+        {% elif winner == "O" %}
+        <div id="WinnerO">WINNER is {{winner}}</div>
+        {% endif %}
         <table>
             {% for i in range(15) %}
-                <tr>
-                    {% for j in range(15) %}
-                    <td>
-                        {% if board[i+4][j+4] == "X" or board[i+4][j+4] == "O" %}
-                        {{ board[i+4][j+4] }}
-                        {% elif winnerFound %}
-                        <div class="pole"></div>
-                        
-                        {% else %}
-                        <a href="{{ url_for('play', x=i, y=j) }}"><div class="pole"></div></a>
-                        {% endif %}
-                    </td>
-                    {% endfor %}
-                </tr>
+            <tr>
+                {% for j in range(15) %}
+                <td>
+                    {% if board[i+4][j+4] == "X" %}
+                    <div class="X">
+                        <div class="divX1"></div>
+                        <div class="divX2"></div>
+                    </div>
+                    {% elif board[i+4][j+4] == "O" %}
+                    <div class="O"></div>
+                    {% else %}
+                    <div class="pole"></div>
+                    {% endif %}
+                </td>
+                {% endfor %}
+            </tr>
             {% endfor %}
         </table>
+        <article>
+            This web was created as part of a school project.
+            Rules are the same as in the game Gomoku, the first player to reach 5 in row in any direction wins.
+            No fauls are implemented and neither are implemted any tournament starts.
+            After the game finishes in order to restart it, just click anywhere.
+            If you can't finish the game, you can just close the tab and the next time you open the web from this device, the game should automatically load back on.<br><br>
+            You can also contact me at: <a href="mailto:NevoralLeos@seznam.cz">NevoralLeos@seznam.cz</a><br>
+            All the codes are free on GitHub at: <a href="https://github.com/Nevos07/Web">this website</a>
+        </article>
     </body>
-</html>>
+</a>
+{% else %}
+<body>
+    <h1>Gomoku</h1>
+    <div id="menu">
+        <a href="{{url_for('reset')}}"><div class="button">Restart</div></a>
+        <a href="{{url_for('playfirst')}}"><div class="button">Play first</div></a>
+        <a href="{{url_for('aifirst')}}"><div class="button">AI first</div></a>
+        <a href="{{url_for('swap')}}"><div class="button">Swap</div></a>
+    </div>
+    <table>
+        {% for i in range(15) %}
+        <tr>
+            {% for j in range(15) %}
+            <td>
+                {% if board[i+4][j+4] == "X" %}
+                <div class="X">
+                    <div class="divX1"></div>
+                    <div class="divX2"></div>
+                </div>
+                {% elif board[i+4][j+4] == "O" %}
+                <div class="O"></div>
+                {% else %}
+                <a href="{{ url_for('play', x=i, y=j) }}"><div class="pole"></div></a>
+                {% endif %}
+            </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    <article>
+        This web was created as part of a school project.
+        Rules are the same as in the game Gomoku, the first player to reach 5 in row in any direction wins.
+        No fauls are implemented and neither are implemted any tournament starts.
+        After the game finishes in order to restart it, just click anywhere.
+        If you can't finish the game, you can just close the tab and the next time you open the web from this device, the game should automatically load back on.<br><br>
+        You can also contact me at: <a href="mailto:NevoralLeos@seznam.cz">NevoralLeos@seznam.cz</a><br>
+        All the codes are free on GitHub at: <a href="https://github.com/Nevos07/Web">this website</a>
+    </article>
+</body>
+{% endif %}
+</html>
