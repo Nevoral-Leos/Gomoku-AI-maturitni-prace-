@@ -112,26 +112,26 @@ def AI(deska, hrac, score, depth, hranice_topx, hranice_bottomx, hranice_lefty, 
     tree = Create_tree(deska, hrac, score, depth, hranice_topx, hranice_bottomx, hranice_lefty, hranice_righty)
     if (depth % 2) == 0:
         hrac = "O" if hrac == "X" else "X"
-    for i in range (depth):
+    for i in range (depth-1):
         depth_id = depth - 1 - i
         for branch_id in range (tree.get_smth(depth_id, 0, 0, "branch_count")):
             if (hrac == "O"):
-                tree.set_smth(depth_id, branch_id, 0, "motherboard_score", inf)
-                for element_id in range (tree.get_smth(depth_id, branch_id, 0, "element_count")):
+                    tree.set_smth(depth_id, branch_id, 0, "motherboard_score", inf)
+            elif (hrac == "X"):
+                    tree.set_smth(depth_id, branch_id, 0, "motherboard_score", -inf)
+            for element_id in range (tree.get_smth(depth_id, branch_id, 0, "element_count")):
+                if (hrac == "O"):
                     el_score = tree.get_smth(depth_id, branch_id, element_id, "score")
                     mb_score = tree.get_smth(depth_id, branch_id, 0, "motherboard_score")
                     if (el_score < mb_score):
                          tree.set_smth(depth_id, branch_id, 0, "motherboard_score", el_score)
-            elif (hrac == "X"):
-                tree.set_smth(depth_id, branch_id, 0, "motherboard_score", -inf)
-                for element_id in range (tree.get_smth(depth_id, branch_id, 0, "element_count")):
+                elif (hrac == "X"):
                     el_score = tree.get_smth(depth_id, branch_id, element_id, "score")
                     mb_score = tree.get_smth(depth_id, branch_id, 0, "motherboard_score")
                     if (el_score > mb_score):
                           tree.set_smth(depth_id, branch_id, 0, "motherboard_score", el_score)
         hrac = "O" if hrac == "X" else "X"
     best_move = tree.get_smth(0, 0, 0, "board_obj")
-    hrac = "O" if hrac == "X" else "X"
     rozsah = tree.get_smth(0, 0, 0, "element_count")
     for element_id in range (rozsah):
         if hrac == "O":
@@ -258,7 +258,7 @@ def Heuristika(deska, souradnice_x, souradnice_y):
             if (x["pocet_vrade"] == 3):
                 deska[souradnice_x + x["vektor"][0]][souradnice_y + x["vektor"][1]] = str(int(deska[souradnice_x + x["vektor"][0]][souradnice_y + x["vektor"][1]]) + 3**(x["pocet_vrade"]+1)*2)
                 skore_toadd += 3**(x["pocet_vrade"]+1)*2
-            elif (deska[souradnice_x + vec[0]][souradnice_y + vec[1]] != "X" and deska[souradnice_x + vec[0]][souradnice_y + vec[1]] != "O") and (len(x["open"]) > 1):
+            if (deska[souradnice_x + vec[0]][souradnice_y + vec[1]] != "X" and deska[souradnice_x + vec[0]][souradnice_y + vec[1]] != "O") and (len(x["open"]) > 1):
                 deska[souradnice_x + x["vektor"][0]][souradnice_y + x["vektor"][1]] = str(int(deska[souradnice_x + x["vektor"][0]][souradnice_y + x["vektor"][1]]) - 3**(x["pocet_vrade"])*2 + 3**(x["pocet_vrade"]+1)*2)
                 deska[souradnice_x + x["open"][0]][souradnice_y + x["open"][1]] = str(int(deska[souradnice_x + x["open"][0]][souradnice_y + x["open"][1]]) - 3**(x["pocet_vrade"])*2 + 3**(x["pocet_vrade"]+1)*2)
                 deska[souradnice_x + vec[0]][souradnice_y + vec[1]] = str(int(deska[souradnice_x + vec[0]][souradnice_y + vec[1]]) + 3**(x["pocet_vrade"]+1)*2)
@@ -267,7 +267,7 @@ def Heuristika(deska, souradnice_x, souradnice_y):
                 deska[souradnice_x + x["vektor"][0]][souradnice_y + x["vektor"][1]] = str(int(deska[souradnice_x + x["vektor"][0]][souradnice_y + x["vektor"][1]]) - 3**(x["pocet_vrade"]) + 3**(x["pocet_vrade"]+1))
                 deska[souradnice_x + x["open"][0]][souradnice_y + x["open"][1]] = str(int(deska[souradnice_x + x["open"][0]][souradnice_y + x["open"][1]]) - 3**(x["pocet_vrade"]) + 3**(x["pocet_vrade"]+1))
                 skore_toadd += (- 3**(x["pocet_vrade"]) + 3**(x["pocet_vrade"]+1) - 3**(x["pocet_vrade"]) + 3**(x["pocet_vrade"]+1))
-            elif (deska[souradnice_x + vec[0]][souradnice_y + vec[1]] != "X" and deska[souradnice_x + vec[0]][souradnice_y + vec[1]] != "O") and (len(x["open"]) == 1):
+            elif (deska[souradnice_x + vec[0]][souradnice_y + vec[1]] != "X" and deska[souradnice_x + vec[0]][souradnice_y + vec[1]] != "O"):
                 deska[souradnice_x + x["vektor"][0]][souradnice_y + x["vektor"][1]] = str(int(deska[souradnice_x + x["vektor"][0]][souradnice_y + x["vektor"][1]]) - 3**(x["pocet_vrade"]) + 3**(x["pocet_vrade"]+1))
                 deska[souradnice_x + vec[0]][souradnice_y + vec[1]] = str(int(deska[souradnice_x + vec[0]][souradnice_y + vec[1]]) + 3**(x["pocet_vrade"]+1))
                 skore_toadd += (- 3**(x["pocet_vrade"]) + 3**(x["pocet_vrade"]+1) + 3**(x["pocet_vrade"]+1))
@@ -365,28 +365,28 @@ def pocet_pozic(deska, souradnice_x, souradnice_y):
 
 def how_many_more(deska, souradnice_x, souradnice_y, vektor):
     more = 1
-    list = []
+    open = []
     skipped = 0
     for i in range (2, 5):
         if (deska[souradnice_x + vektor[0] * i][souradnice_y + vektor[1] * i] == deska[souradnice_x][souradnice_y]):
             more += 1
         elif (deska[souradnice_x + vektor[0] * i][souradnice_y + vektor[1] * i] != "X" and deska[souradnice_x + vektor[0] * i][souradnice_y + vektor[1] * i] != "O"):
-            list.append(vektor[0] * i)
-            list.append(vektor[1] * i)
+            open.append(vektor[0] * i)
+            open.append(vektor[1] * i)
             if (deska[souradnice_x + vektor[0] * (i + 1)][souradnice_y + vektor[1] * (i + 1)] == deska[souradnice_x][souradnice_y]):
                 more +=1
                 skipped += 1
                 if (deska[souradnice_x + vektor[0] * (i + 2)][souradnice_y + vektor[1] * (i + 2)] != "X" and deska[souradnice_x + vektor[0] * (i + 2)][souradnice_y + vektor[1] * (i + 2)] != "O"):
-                    list.append(vektor[0] * (i + 2))
-                    list.append(vektor[1] * (i + 2))
+                    open.append(vektor[0] * (i + 2))
+                    open.append(vektor[1] * (i + 2))
                 elif (deska[souradnice_x + vektor[0] * (i + 2)][souradnice_y + vektor[1] * (i + 2)] == deska[souradnice_x][souradnice_y]):
                     more +=1
                     if (deska[souradnice_x + vektor[0] * (i + 3)][souradnice_y + vektor[1] * (i + 3)] != "X" and deska[souradnice_x + vektor[0] * (i + 3)][souradnice_y + vektor[1] * (i + 3)] != "O"):
-                        list.append(vektor[0] * (i + 3))
-                        list.append(vektor[1] * (i + 3))
-            return more, list, skipped
-        else: return more, list, skipped
-    return more, list, skipped
+                        open.append(vektor[0] * (i + 3))
+                        open.append(vektor[1] * (i + 3))
+            return more, open, skipped
+        else: return more, open, skipped
+    return more, open, skipped
 
 def how_many_blocked(deska, souradnice_x, souradnice_y, vektor):
     more = 1
@@ -420,7 +420,7 @@ def how_many_blocked(deska, souradnice_x, souradnice_y, vektor):
 def skip1(deska, souradnice_x, souradnice_y, vektor):
     more = 1
     list = []
-    for i in range (3,5):
+    for i in range (3,6):
         if (deska[souradnice_x][souradnice_y] == deska[souradnice_x + vektor[0] * i][souradnice_y + vektor[1] * i]):
             more += 1
         elif (deska[souradnice_x + vektor[0] * i][souradnice_y + vektor[1] * i] != "X" and deska[souradnice_x + vektor[0] * i][souradnice_y + vektor[1] * i] != "O"):
@@ -428,7 +428,6 @@ def skip1(deska, souradnice_x, souradnice_y, vektor):
             list.append(vektor[1] * i)
             return more, list
         else: 
-            list.append(1) 
             return more, list
     return more, list
 

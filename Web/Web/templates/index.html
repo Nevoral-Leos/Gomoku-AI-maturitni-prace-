@@ -138,12 +138,12 @@
             <tr>
                 {% for j in range(15) %}
                 <td>
-                    {% if board[i+4][j+4] == "X" %}
+                    {% if playboard[i+4][j+4] == "X" %}
                     <div class="X">
                         <div class="divX1"></div>
                         <div class="divX2"></div>
                     </div>
-                    {% elif board[i+4][j+4] == "O" %}
+                    {% elif playboard[i+4][j+4] == "O" %}
                     <div class="O"></div>
                     {% else %}
                     <div class="pole"></div>
@@ -178,12 +178,12 @@
         <tr>
             {% for j in range(15) %}
             <td>
-                {% if board[i+4][j+4] == "X" %}
+                {% if playboard[i+4][j+4] == "X" %}
                 <div class="X">
                     <div class="divX1"></div>
                     <div class="divX2"></div>
                 </div>
-                {% elif board[i+4][j+4] == "O" %}
+                {% elif playboard[i+4][j+4] == "O" %}
                 <div class="O"></div>
                 {% else %}
                 <a href="{{ url_for('play', x=i, y=j) }}"><div class="pole"></div></a>

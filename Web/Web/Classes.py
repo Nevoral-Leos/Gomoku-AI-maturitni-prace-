@@ -10,6 +10,8 @@ class Game():
         self.hranice_righty = 4
         self.win = False
         self.pocet_tahu = 0
+        self.first_player = 1
+        self.poradi = 1
 
     def get_pocet_tahu(self):
         return self.pocet_tahu
