@@ -339,3 +339,6 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 Web/Web/Nevoral_Leoš_SOČ_Zdrojový_kod.zip
+Web/env
+Web/env/pyvenv.cfg
+*.zip
